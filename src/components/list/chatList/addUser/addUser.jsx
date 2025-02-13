@@ -1,8 +1,12 @@
 import { db } from "../../../../lib/firebase";
 import{
     collection,
+    doc,
     getDoc,
+    getDocs,
     query,
+    serverTimestamp,
+    setDoc,
     where,
 } from "firebase/firestore";
 import "./addUser.css"
@@ -21,15 +25,35 @@ const AddUser = () => {
 
             const q = query(userRef, where("username", "==", username));
             
-            const querySnapshot = await getDoc(q)
+            const querySnapshot = await getDocs(q)
 
             if (!querySnapshot.empty){
                 setUser(querySnapshot.docs[0].data());
             }
+            }catch(err){
+                console.log(err)
+            }
+    }
+
+    const handleAdd = async () => {
+
+        const chatRef = collection(db, "chats")
+        const userChatsRef = collection(db, "userchats")
+
+        try{
+            const newChatRef = doc(chatRef)
+
+            await setDoc(newChatRef, {
+                createdAt: serverTimestamp(),
+                messages: []
+            });
+            
+            console.log(newChatRef.id)
         }catch(err){
             console.log(err)
         }
     }
+
     return ( 
         <div className="addUser">
             <form onSubmit={handleSearch}>
@@ -41,7 +65,7 @@ const AddUser = () => {
                     <img src={user.avatr || "./avatar.png" }alt="" />
                 <span>{user.username}</span>
                 </div>
-                <button>Add User</button>
+                <button onClick={handleAdd}>Add User</button>
             </div>}
         </div>
      );
