@@ -1,5 +1,6 @@
 import { db } from "../../../../lib/firebase";
 import{
+    arrayUnion,
     collection,
     doc,
     getDoc,
@@ -7,13 +8,18 @@ import{
     query,
     serverTimestamp,
     setDoc,
+    updateDoc,
     where,
 } from "firebase/firestore";
 import "./addUser.css"
 import { useState } from "react";
+import { useUserStore } from "../../../../lib/userStore";
 
 const AddUser = () => {
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(null);
+
+    const {currentUser} = useUserStore();
+
     const handleSearch = async e => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -47,9 +53,28 @@ const AddUser = () => {
                 createdAt: serverTimestamp(),
                 messages: []
             });
+
+            await updateDoc(doc(userChatsRef, user.id), {
+                chats: arrayUnion({
+                    chatId: newChatRef.id,
+                    lastMessage: "",
+                    receiverId: currentUser.id,
+                    updatedAt: Date.now(),
+
+                })
+            })
+
+            await updateDoc(doc(userChatsRef, currentUser.id), {
+                chats: arrayUnion({
+                    chatId: newChatRef.id,
+                    lastMessage: "",
+                    receiverId: user.id,
+                    updatedAt: Date.now(),
+
+                })
+            })
             
-            console.log(newChatRef.id)
-        }catch(err){
+        } catch(err){
             console.log(err)
         }
     }
