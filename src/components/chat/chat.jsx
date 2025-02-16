@@ -139,13 +139,13 @@ const Chat = () => {
             </div>
         </div>
         ))}
-        {/* {img.url && (
+        {img.url && (
           <div className="message own">
             <div className="text">
               <img src={img.url} alt="" className="img"/>
             </div>
           </div>
-        )} */}
+        )}
         <div ref={endRef} ></div>
       </div>
       <div className="bottom">
