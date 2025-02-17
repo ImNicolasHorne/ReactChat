@@ -37,7 +37,7 @@ const Login = () => {
             await setDoc(doc(db, "users", res.user.uid), {
                 username,
                 email,
-                avatr: imgUrl,
+                avatar: imgUrl,
                 id: res.user.uid,
                 blocked: [],
             });

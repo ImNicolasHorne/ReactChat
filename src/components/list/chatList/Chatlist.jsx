@@ -58,23 +58,22 @@ const ChatList = () => {
 
     const handleSelect = async (chat) => {
 
-        const userChats = chats.map((item) => {
-            const { user, ...rest } = item;
-            return rest
-        });
+        const userChats = chats.map(item => {
+            const {user, ...rest} =item;
+            return rest;
+        })
 
-        const chatIndex = userChats.findIndex(item => item.chaId === chat.chaId)
+        const chatIndex = userChats.findIndex(item=>item.chatId === chat.chatId)
 
         userChats[chatIndex].isSeen = true;
 
         const userChatsRef = doc(db, "userchats", currentUser.id);
 
         try{
-
             await updateDoc(userChatsRef, {
                 chats: userChats,
             })
-            changeChat(chat.chatId, chat.user); 
+            changeChat(chat.chatId, chat.user);
         }catch(err){
             console.log(err)
         }
@@ -97,13 +96,13 @@ const ChatList = () => {
             {chats.map((chat) => (          
                 <div 
                 className="item" 
-                key={chat.chaId} 
+                key={chat.chatId} 
                 onClick={() => handleSelect(chat)}
                 style={{
-                    backgroundColor: chat?.isSeen ? "transparent" : "##5183fe"
+                    backgroundColor: chat?.isSeen ? "transparent" : "#5183fe"
                 }}
                 >
-                    <img src={chat.user.avatr || "./avatar.png"} alt="" />
+                    <img src={chat.user.avatar || "./avatar.png"} alt="" />
                     <div className="texts">
                         <span>{chat.user.username}</span>
                         <p>{chat.lastMessage}</p>

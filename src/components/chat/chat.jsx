@@ -53,7 +53,7 @@ const Chat = () => {
 };
 
   const handleSend = async () => {
-    if (text === "") return;
+    if(text ==="") return
 
     let imgUrl = null
 
@@ -62,27 +62,28 @@ const Chat = () => {
       if(img.file){
         imgUrl = await upload(img.file)
       }
+
       await updateDoc(doc(db, "chats", chatId), {
         messages: arrayUnion({
           senderId: currentUser.id,
           text,
           createdAt: new Date(),
-          ...Chat(imgUrl && {img: imgUrl}),
+          ...(imgUrl && { img: imgUrl})
         }),
       });
 
       const userIDs = [currentUser.id, user.id]
 
-      userIDs.forEach(async (id)=> {
+      userIDs. forEach(async (id) => {
+
+        const userChatsRef = doc(db, "userchats", id);
+        const userChatsSnapshot = await getDoc(userChatsRef);
         
-        const userChatsRef = doc(db, "userchats", id)
-        const userChatsSnapshot = await getDoc(userChatsRef)
-        
-        if(userChatsSnapshot.exists()){
-          const userChatsData = userChatsSnapshot.data()
+        if (userChatsSnapshot.exists()) {
+          const userChatsData = userChatsSnapshot.data();
           
           const chatIndex = userChatsData.chats.findIndex(
-            (c)=> c.chatId === chatId
+            (c) => c.chatId === chatId
           );
           
           userChatsData.chats[chatIndex].lastMessage = text;
@@ -95,15 +96,14 @@ const Chat = () => {
           });
         }
       });
-
     }catch(err){
-      console.log(err);
+      console.log(err)
     }
 
     setImg({
       file: null,
       url: "",
-    });
+    })
 
     setText("")
   }
@@ -126,7 +126,7 @@ const Chat = () => {
       </div>
       <div className="center">
         {chat?.messages?.map(message => ( 
-          <div className="message own" key={message?.createdAt}>
+          <div className={message.senderId === currentUser?.id ? "message own" : "message"} key={message?.createdAt}>
             <div className="texts">
                 {message.img && <img 
                 src={message.img}
@@ -174,7 +174,11 @@ const Chat = () => {
             <EmojiPicker open={open} onEmojiClick={handleEmoji} />
           </div>
         </div>
-        <button className="sendButton" onClick={handleSend} >Send</button>
+        <button 
+          className="sendButton" 
+          onClick={handleSend} >
+            Send
+        </button>
       </div>
     </div>
   );
