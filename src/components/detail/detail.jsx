@@ -1,4 +1,4 @@
-import { useChatStore } from "../../lib/chatStore";
+import {  useChatStore } from "../../lib/chatStore";
 import { auth } from "../../lib/firebase";
 import { useUserStore } from "../../lib/userStore";
 import "./detail.css"
@@ -20,7 +20,7 @@ const Detail = () => {
     return ( 
         <div className="detail">
             <div className="user">
-                <img src={user?.avatar} alt="" />
+                <img src={ user?.avatr} alt="" />
                 <h2>{user?.username}</h2>
                 <p>
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
